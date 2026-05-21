@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -14,6 +15,8 @@ public class User {
     private Long id;
 
     private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)// パスワードは入力はできるが、出力はしないようにする
     private String password;
     private int role;
 

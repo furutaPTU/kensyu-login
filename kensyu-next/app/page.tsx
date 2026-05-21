@@ -12,6 +12,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleSubmit = async () => {
+    console.log("password:", password);
     const response = await fetch(mode === "login" ? "http://localhost:8080/login" : "http://localhost:8080/register", {
       method:  "POST",
       credentials: "include", // クッキーを送信するために必要,この通信ではクッキーを送信する許可を与える

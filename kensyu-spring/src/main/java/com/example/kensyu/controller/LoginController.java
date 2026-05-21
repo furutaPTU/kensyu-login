@@ -10,6 +10,7 @@ import java.util.List;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 
+
 @CrossOrigin(origins = "http://localhost:3000",
              allowCredentials = "true")
 @RestController
@@ -34,6 +35,10 @@ public class LoginController {
         System.out.println("login session id: " + session.getId());//　セッションエラー確認用
 
         User user = userRepository.findByEmail(request.getEmail());
+
+        System.out.println("===== login debug =====");
+        System.out.println("request password: " + request.getPassword());
+        System.out.println("db password: " + (user != null ? user.getPassword() : "user null"));
 
         if (user != null && user.getPassword().equals(request.getPassword())) {
             session.setAttribute("user", user);
