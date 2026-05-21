@@ -15,6 +15,20 @@ export default function UsersPage() {
     fetchUsers();
   }, []);
 
+    const handleDelete = async (id: number) => {
+        if (!confirm("本当に削除しますか？")) return;
+
+        const response = await fetch(`http://localhost:8080/users/${id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            alert("削除に失敗しました");
+            return;
+        }
+
+        setUsers((prev: any[]) => prev.filter((user) => user.id !== id));// 削除成功したユーザーを画面からも消す(削除したユーザーを残して表示している)
+    };
   return (
     <div style={{ padding: "40px", backgroundColor: "#f5f6fa", minHeight: "100vh" }}>
       <div
@@ -37,6 +51,7 @@ export default function UsersPage() {
               <th style={thStyle}>ID</th>
               <th style={thStyle}>Email</th>
               <th style={thStyle}>Role</th>
+              <th>操作</th>
             </tr>
           </thead>
 
@@ -47,6 +62,21 @@ export default function UsersPage() {
                 <td style={tdStyle}>{user.email}</td>
                 <td style={tdStyle}>
                   {user.role === 1 ? "管理者" : "一般ユーザー"}
+                </td>
+                <td>
+                    <button
+                    onClick={() => handleDelete(user.id)}
+                    style={{
+                        backgroundColor: "#ef4444",
+                        color: "white",
+                        padding: "4px 10px",
+                        borderRadius: "6px",
+                        border: "none",
+                        cursor: "pointer",
+                    }}
+                    >
+                    削除
+                    </button>
                 </td>
               </tr>
             ))}

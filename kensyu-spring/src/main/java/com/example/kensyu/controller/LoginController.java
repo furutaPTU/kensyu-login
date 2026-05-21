@@ -68,4 +68,9 @@ public class LoginController {
         return "logout success";
     }
 
+    
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userRepository.deleteById(id);
+    }
 }
