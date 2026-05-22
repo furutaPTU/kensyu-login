@@ -69,8 +69,39 @@ public class LoginController {
     }
 
     
+    @GetMapping("/users/{id}") // ユーザーIDの取得
+    public ResponseEntity<?> getUser(@PathVariable Long id) {  
+        return userRepository.findById(id)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User request) {
+        return userRepository.findById(id).map(user -> {
+            user.setEmail(request.getEmail());
+            user.setRole(request.getRole());
+            return ResponseEntity.ok(userRepository.save(user));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
+    }
+
+    @PatchMapping("/users/{id}/password")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody java.util.Map<String, String> body) {
+        String currentPassword = body.get("currentPassword");
+        String newPassword = body.get("newPassword");
+
+        return userRepository.findById(id).map(user -> {
+            if (!user.getPassword().equals(currentPassword)) {
+                return ResponseEntity.status(400).body("現在のパスワードが正しくありません");
+            }
+            user.setPassword(newPassword);
+            userRepository.save(user);
+            return ResponseEntity.ok("パスワードを変更しました");
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

@@ -1,9 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+type User = {
+  id: number;
+  email: string;
+  role: number;
+};
+
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -27,7 +34,7 @@ export default function UsersPage() {
             return;
         }
 
-        setUsers((prev: any[]) => prev.filter((user) => user.id !== id));// 削除成功したユーザーを画面からも消す(削除したユーザーを残して表示している)
+        setUsers((prev) => prev.filter((user) => user.id !== id));// 削除成功したユーザーを画面からも消す(削除したユーザーを残して表示している)
     };
   return (
     <div style={{ padding: "40px", backgroundColor: "#f5f6fa", minHeight: "100vh" }}>
@@ -56,10 +63,14 @@ export default function UsersPage() {
           </thead>
 
           <tbody>
-            {users.map((user: any) => (
+            {users.map((user) => (
               <tr key={user.id} style={{ borderBottom: "1px solid #eee" }}>
                 <td style={tdStyle}>{user.id}</td>
-                <td style={tdStyle}>{user.email}</td>
+                <td style={tdStyle}>
+                  <Link href={`/users/${user.id}`} style={{ color: "#3b82f6", textDecoration: "underline" }}>
+                    {user.email}
+                  </Link>
+                </td>
                 <td style={tdStyle}>
                   {user.role === 1 ? "管理者" : "一般ユーザー"}
                 </td>
